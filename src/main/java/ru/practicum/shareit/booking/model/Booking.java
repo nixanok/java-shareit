@@ -21,6 +21,6 @@ public class Booking {
 
     private Status status;
 
-    public enum Status {WAITING, APPROVED, REJECTED, CANCELED}
+    public enum Status { WAITING, APPROVED, REJECTED, CANCELED }
 
 }

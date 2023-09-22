@@ -6,7 +6,7 @@ import ru.practicum.shareit.item.model.Item;
 public class ItemMapper {
 
     private ItemMapper() {
-    };
+    }
 
     public static ItemDto toDto(final Item item) {
         return ItemDto.builder()
