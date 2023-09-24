@@ -38,6 +38,19 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
+    public List<Item> searchByNameAndDescription(String text) {
+        if (text.isBlank()) {
+            return Collections.emptyList();
+        }
+        return items.values()
+                .stream()
+                .filter(item -> item.getName().toLowerCase().contains((text.toLowerCase())) ||
+                        item.getDescription().toLowerCase().contains(text.toLowerCase()) &&
+                        item.getAvailable())
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<Item> getByOwnerId(Long ownerId) {
         return items.values().stream()
                 .filter(item -> item.getOwnerId().equals(ownerId))

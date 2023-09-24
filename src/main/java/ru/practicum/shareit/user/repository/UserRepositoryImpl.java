@@ -11,6 +11,7 @@ import java.util.*;
 public class UserRepositoryImpl implements UserRepository {
 
     private final Map<Long, User> users = new HashMap<>();
+    private final Map<Long, String> emails = new HashMap<>();
 
     private long nextId = 1;
 
@@ -19,18 +20,10 @@ public class UserRepositoryImpl implements UserRepository {
         if (containsEmail(user.getEmail())) {
             throw new EmailAlreadyExistException(user.getEmail());
         }
-
         user.setId(nextId++);
         users.put(user.getId(), user);
+        emails.put(user.getId(), user.getEmail());
         return user;
-    }
-
-    @Override
-    public boolean containsEmail(final String email) {
-        return users.values()
-                .stream()
-                .map(User::getEmail)
-                .anyMatch(_email -> _email.equals(email));
     }
 
     @Override
@@ -61,11 +54,28 @@ public class UserRepositoryImpl implements UserRepository {
         if (!users.containsKey(id)) {
             throw new UserNotFoundException(id);
         }
+        emails.remove(id);
         users.remove(id);
     }
 
     @Override
     public void removeAll() {
         users.clear();
+        emails.clear();
+    }
+
+    @Override
+    public void updateEmail(Long id, String email) {
+        if (!emails.containsKey(id)) {
+            throw new UserNotFoundException(id);
+        }
+        emails.put(id, email);
+    }
+
+    public boolean containsEmail(final String email) {
+        return users.values()
+                .stream()
+                .map(User::getEmail)
+                .anyMatch(_email -> _email.equals(email));
     }
 }

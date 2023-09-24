@@ -3,12 +3,12 @@ package ru.practicum.shareit.item.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.BasicInfo;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class ItemController {
 
     @PostMapping
     public ItemDto createItem(
-            @RequestBody @Valid final ItemDto item,
+            @RequestBody @Validated(BasicInfo.class) final ItemDto item,
             @NotNull @RequestHeader("X-Sharer-User-Id") Long ownerId
     ) {
         log.debug("Request \"createItem\"is called.");
@@ -33,7 +33,7 @@ public class ItemController {
     @PatchMapping(path = "/{itemId}")
     public ItemDto patchItem(
             @PathVariable(name = "itemId") final Long id,
-                          @RequestBody final Item item,
+                          @RequestBody final ItemDto item,
                           @NotNull @RequestHeader("X-Sharer-User-Id") Long ownerId
     ) {
         log.debug("Request \"patchItem\"is called.");

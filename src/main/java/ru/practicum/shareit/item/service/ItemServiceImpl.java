@@ -11,7 +11,6 @@ import ru.practicum.shareit.item.tool.ItemMapper;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,7 +35,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto patch(Long id, Item patchItem, Long ownerId) {
+    public ItemDto patch(Long id, ItemDto patchItem, Long ownerId) {
         Optional<Item> optionalItem = itemRepository.getById(id);
         if (optionalItem.isEmpty()) {
             throw new ItemNotFoundException(id);
@@ -67,15 +66,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> search(String text) {
-        if (text.isBlank()) {
-            return Collections.emptyList();
-        }
-        return itemRepository.getAll()
+        return itemRepository.searchByNameAndDescription(text)
                 .stream()
-                .filter(item ->
-                        (item.getName().toLowerCase().contains(text.toLowerCase()) ||
-                        item.getDescription().toLowerCase().contains(text.toLowerCase())) &&
-                        item.getAvailable())
                 .map(ItemMapper::toDto)
                 .collect(Collectors.toList());
     }

@@ -1,6 +1,5 @@
-package ru.practicum.shareit;
+package ru.practicum.shareit.error;
 
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -20,14 +19,6 @@ import java.util.List;
 @RestControllerAdvice(basePackages = "ru.practicum.shareit")
 @Slf4j
 public final class ErrorController {
-
-    @Data
-    public static final class ErrorResponse {
-        private final String error;
-        private final int code;
-        private final String description;
-        private final LocalDateTime timestamp;
-    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -59,9 +50,7 @@ public final class ErrorController {
         return new ErrorResponse("NOT_FOUND", 404, e.getMessage(), LocalDateTime.now().withNano(0));
     }
 
-    @ExceptionHandler({
-            EmailAlreadyExistException.class
-    })
+    @ExceptionHandler({ EmailAlreadyExistException.class })
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleAlreadyExistError(final RuntimeException e) {
         log.warn(e.getMessage());

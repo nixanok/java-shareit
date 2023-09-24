@@ -40,6 +40,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         if (patchUser.getEmail() != null) {
+            userRepository.updateEmail(id, patchUser.getEmail());
             user.setEmail(patchUser.getEmail());
         }
         if (patchUser.getName() != null) {

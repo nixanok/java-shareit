@@ -9,7 +9,6 @@ public interface UserRepository {
 
     User add(User user);
 
-    boolean containsEmail(String email);
 
     boolean contains(final Long id);
 
@@ -23,4 +22,5 @@ public interface UserRepository {
 
     void removeAll();
 
+    void updateEmail(Long id, String email);
 }
