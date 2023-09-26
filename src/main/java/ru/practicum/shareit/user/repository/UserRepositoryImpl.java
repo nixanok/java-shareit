@@ -73,7 +73,7 @@ public class UserRepositoryImpl implements UserRepository {
         emails.add(updatedEmail);
     }
 
-    public boolean containsEmail(final String email) {
+    private boolean containsEmail(final String email) {
         return emails.contains(email);
     }
 }
