@@ -22,5 +22,5 @@ public interface UserRepository {
 
     void removeAll();
 
-    void updateEmail(Long id, String email);
+    void updateEmail(String email, String updatedEmail);
 }
