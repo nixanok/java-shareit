@@ -2,9 +2,10 @@ package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.exception.EmailAlreadyExistException;
+import ru.practicum.shareit.user.exception.EmailAlreadyExistsException;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -23,35 +24,39 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto create(UserDto user) {
-        return UserMapper.toDto(userRepository.add(UserMapper.fromDto(user)));
+        try {
+            return UserMapper.toDto(userRepository.save(UserMapper.fromDto(user)));
+        } catch (DataIntegrityViolationException e) {
+            throw new EmailAlreadyExistsException(user.getEmail());
+        }
     }
 
     @Override
     public UserDto patch(Long id, UserDto patchUser) {
-        Optional<User> optionalUser = userRepository.getById(id);
+        Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isEmpty()) {
             throw new UserNotFoundException(id);
         }
         User user = optionalUser.get();
         if (patchUser.getEmail() != null) {
-            Optional<User> userWithSameEmail  = userRepository.getByEmail(patchUser.getEmail());
+            Optional<User> userWithSameEmail  = userRepository.findByEmail(patchUser.getEmail());
             if (userWithSameEmail.isPresent() && !userWithSameEmail.get().getId().equals(id)) {
-                throw new EmailAlreadyExistException(patchUser.getEmail());
+                throw new EmailAlreadyExistsException(patchUser.getEmail());
             }
         }
         if (patchUser.getEmail() != null) {
-            userRepository.updateEmail(user.getEmail(), patchUser.getEmail());
             user.setEmail(patchUser.getEmail());
         }
         if (patchUser.getName() != null) {
             user.setName(patchUser.getName());
         }
-        return UserMapper.toDto(user);
+        User updatedUser = userRepository.save(user);
+        return UserMapper.toDto(updatedUser);
     }
 
     @Override
     public List<UserDto> getAll() {
-        return userRepository.getAll()
+        return userRepository.findAll()
                 .stream()
                 .map(UserMapper::toDto)
                 .collect(Collectors.toList());
@@ -59,7 +64,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getById(Long id) {
-        Optional<User> user = userRepository.getById(id);
+        Optional<User> user = userRepository.findById(id);
         if (user.isEmpty()) {
             throw new UserNotFoundException(id);
         }
@@ -68,7 +73,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getByEmail(String email) {
-        Optional<User> user = userRepository.getByEmail(email);
+        Optional<User> user = userRepository.findByEmail(email);
         if (user.isEmpty()) {
             throw new UserNotFoundException(email);
         }
@@ -77,6 +82,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void removeById(Long id) {
-        userRepository.removeById(id);
+        if (!userRepository.existsById(id)) {
+            throw new UserNotFoundException(id);
+        }
+        userRepository.deleteById(id);
     }
 }

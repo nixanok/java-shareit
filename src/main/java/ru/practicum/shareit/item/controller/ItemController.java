@@ -5,8 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.BasicInfo;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.dto.BasicUserInfo;
+import ru.practicum.shareit.item.model.dto.ItemBookingsDto;
+import ru.practicum.shareit.item.model.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.constraints.NotNull;
@@ -23,7 +24,7 @@ public class ItemController {
 
     @PostMapping
     public ItemDto createItem(
-            @RequestBody @Validated(BasicInfo.class) final ItemDto item,
+            @RequestBody @Validated(BasicUserInfo.class) final ItemDto item,
             @NotNull @RequestHeader("X-Sharer-User-Id") Long ownerId
     ) {
         log.debug("Request \"createItem\"is called.");
@@ -41,7 +42,7 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> getItemsByOwnerId(@RequestHeader("X-Sharer-User-Id") @NotNull Long ownerId) {
+    public List<ItemBookingsDto> getItemsByOwnerId(@RequestHeader("X-Sharer-User-Id") @NotNull Long ownerId) {
         log.debug("Request \"getItemsByOwnerId\"is called.");
         return itemService.getByOwnerId(ownerId);
     }
@@ -53,9 +54,9 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItem(@PathVariable(name = "itemId") Long id) {
+    public ItemBookingsDto getItem(@RequestHeader("X-Sharer-User-Id") @NotNull Long ownerId, @PathVariable(name = "itemId") Long id) {
         log.debug("Request \"getItem\"is called.");
-        return itemService.getById(id);
+        return itemService.getById(id, ownerId);
     }
 
     @DeleteMapping("/{itemId}")
