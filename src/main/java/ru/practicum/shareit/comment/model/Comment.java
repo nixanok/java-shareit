@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity(name = "comments")
+@Entity
+@Table(name = "comments", schema = "public")
 public class Comment {
 
     @Id

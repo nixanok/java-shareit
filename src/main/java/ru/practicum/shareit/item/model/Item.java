@@ -9,7 +9,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity(name = "items")
+@Entity
+@Table(name = "items", schema = "public")
 public class Item {
 
     @Id
