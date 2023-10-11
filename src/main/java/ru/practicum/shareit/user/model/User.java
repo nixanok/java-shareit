@@ -5,7 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 
 @Data
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Entity(name = "users")
 public class User {

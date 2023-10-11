@@ -6,7 +6,8 @@ import ru.practicum.shareit.user.model.User;
 import javax.persistence.*;
 
 @Data
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Entity(name = "items")
 public class Item {
