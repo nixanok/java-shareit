@@ -10,8 +10,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     @Query(value = "select * " +
                    "from items i " +
-                   "where (i.name ilike concat('%', ?1, '%') or i.description ilike concat('%', ?1, '%')) and i.available = true"
-            , nativeQuery = true)
+                   "where (i.name ilike concat('%', ?1, '%') or i.description ilike concat('%', ?1, '%')) and i.available = true",
+            nativeQuery = true)
     List<Item> findAllByNameAndDescription(String text);
 
     List<Item> findAllByOwnerId(Long ownerId);
