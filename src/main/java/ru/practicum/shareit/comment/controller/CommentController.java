@@ -8,7 +8,6 @@ import ru.practicum.shareit.comment.model.dto.CommentDto;
 import ru.practicum.shareit.comment.service.CommentService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping(path = "/items")
