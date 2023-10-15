@@ -42,18 +42,15 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     Optional<Booking> findFirstByItemIdAndBookerIdAndEndIsBeforeAndStatus(Long itemId, Long userId,
                                                                  LocalDateTime end, Status status);
 
-    @Query(value = "SELECT * " +
-            "FROM bookings b  " +
-            "WHERE b.item_id IN :itemIds " +
-            "AND b.start_time  <= CURRENT_TIMESTAMP " +
-            "AND b.start_time = (SELECT MAX(b2.start_time) FROM bookings b2 WHERE b2.item_id = b.item_id) " +
-            "AND b.status = 'APPROVED' ", nativeQuery = true)
+    @Query("SELECT b FROM Booking b " +
+            "WHERE b.item.id IN :itemIds " +
+            "AND b.start = (SELECT MAX(b2.start) FROM Booking b2 WHERE b2.item.id = b.item.id AND b2.start <= CURRENT_TIMESTAMP) " +
+            "AND b.status = 'APPROVED'")
     List<Booking> findLatestBookingsForItems(@Param("itemIds") List<Long> itemIds);
 
     @Query("SELECT b FROM Booking b " +
             "WHERE b.item.id IN :itemIds " +
-            "AND b.start >= CURRENT_TIMESTAMP " +
-            "AND b.start = (SELECT MIN(b2.start) FROM Booking b2 WHERE b2.item.id = b.item.id) " +
+            "AND b.start = (SELECT MIN(b2.start) FROM Booking b2 WHERE b2.item.id = b.item.id AND b2.start >= CURRENT_TIMESTAMP) " +
             "AND b.status = 'APPROVED'")
     List<Booking> findFutureBookingsForItems(@Param("itemIds") List<Long> itemIds);
 

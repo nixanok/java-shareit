@@ -116,24 +116,6 @@ public class ItemServiceImpl implements ItemService {
                         afterBookings.get(item.getId())))
                 .sorted(Comparator.comparing(ItemBookingsDto::getId))
                 .collect(Collectors.toList());
-
-//        return itemRepository.findAllByOwnerId(ownerId)
-//                .stream()
-//                .map(item -> ItemMapper.toBookingsDto(item,
-//                        bookingRepository.findFirstByItemIdAndStartIsBeforeAndStatus(
-//                                    item.getId(),
-//                                    LocalDateTime.now(),
-//                                    Status.APPROVED,
-//                                    Sort.by(Sort.Direction.DESC, "start")),
-//                        bookingRepository.findFirstByItemIdAndStartIsAfterAndStatus(
-//                                    item.getId(),
-//                                    LocalDateTime.now(),
-//                                    Status.APPROVED,
-//                                    Sort.by(Sort.Direction.ASC, "start")),
-//                        getComments(item.getId()))
-//                )
-//                .sorted(Comparator.comparing(ItemBookingsDto::getId))
-//                .collect(Collectors.toList());
     }
 
     @Override
