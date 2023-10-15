@@ -28,7 +28,7 @@ public class BookingController {
     @PostMapping
     public BookingSendingDto createBooking(
             @RequestBody @Validated(BookingCreationInfo.class) BookingCreationDto bookingCreationDto,
-            @NotNull @RequestHeader("X-Sharer-User-Id") Long ownerId
+            @RequestHeader("X-Sharer-User-Id") long ownerId
     ) {
         log.debug("Request \"createBooking\"is called.");
         return bookingService.create(bookingCreationDto, ownerId);
@@ -36,7 +36,7 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public BookingApproveDto approveOrRejectBooking(
-            @PathVariable(name = "bookingId") final Long bookingId,
+            @PathVariable(name = "bookingId") long bookingId,
             @NotNull @RequestParam(name = "approved") Boolean isApproved,
             @NotNull @RequestHeader("X-Sharer-User-Id") Long ownerId
     ) {
@@ -46,7 +46,7 @@ public class BookingController {
 
     @GetMapping("/{bookingId}")
     public BookingSendingDto getBooking(
-            @PathVariable(name = "bookingId") final Long bookingId,
+            @PathVariable(name = "bookingId") long bookingId,
             @NotNull @RequestHeader("X-Sharer-User-Id") Long userId
     ) {
         log.debug("Request \"getBooking\"is called.");
@@ -55,7 +55,7 @@ public class BookingController {
 
     @GetMapping
     public List<BookingSendingDto> getBookingsByBookerId(
-        @NotNull @RequestHeader("X-Sharer-User-Id") Long bookerId,
+        @RequestHeader("X-Sharer-User-Id") long bookerId,
         @RequestParam(name = "state", defaultValue = "ALL") State state
     ) {
         log.debug("Request \"getBookingsByUserId\"is called.");
@@ -64,7 +64,7 @@ public class BookingController {
 
     @GetMapping("/owner")
     public List<BookingSendingDto> getBookingsItemsByUserId(
-            @NotNull @RequestHeader("X-Sharer-User-Id") Long ownerId,
+            @RequestHeader("X-Sharer-User-Id") long ownerId,
             @RequestParam(name = "state", defaultValue = "ALL") State state
     ) {
         log.debug("Request \"getBookingsItemsByUserId\"is called.");

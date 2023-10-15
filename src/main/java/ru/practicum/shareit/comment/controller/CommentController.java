@@ -20,9 +20,9 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping(path = "/{itemId}/comment")
-    public CommentDto postComment(@PathVariable(name = "itemId") final Long itemId,
-                                  @NotNull @RequestHeader("X-Sharer-User-Id") Long authorId,
-                                  @RequestBody @Valid final CommentDto commentDto) {
+    public CommentDto postComment(@PathVariable(name = "itemId") long itemId,
+                                  @RequestHeader("X-Sharer-User-Id") long authorId,
+                                  @RequestBody @Valid CommentDto commentDto) {
         log.debug("Request \"postComment\"is called.");
         return commentService.postComment(itemId, authorId, commentDto);
     }

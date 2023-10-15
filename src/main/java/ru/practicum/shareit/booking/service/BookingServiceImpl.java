@@ -2,7 +2,9 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.exception.BookingNotFoundException;
 import ru.practicum.shareit.booking.exception.BookingStatusException;
 import ru.practicum.shareit.booking.exception.BookingTimeException;
@@ -27,19 +29,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Transactional(readOnly = true)
 public class BookingServiceImpl implements BookingService {
 
-    @Autowired
     private final BookingRepository bookingRepository;
 
-    @Autowired
     private final UserRepository userRepository;
 
-    @Autowired
     private final ItemRepository itemRepository;
 
     @Override
+    @Transactional
     public BookingSendingDto create(BookingCreationDto bookingCreationDto, Long brokerId) {
         if (!bookingCreationDto.getStart().isBefore(bookingCreationDto.getEnd())) {
             throw new BookingTimeException("Start is not before end");
@@ -62,6 +63,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public Booking approve(Long bookingId, Boolean isApproved, Long ownerId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new BookingNotFoundException(bookingId));
@@ -88,25 +90,27 @@ public class BookingServiceImpl implements BookingService {
         List<Booking> bookings;
         switch (state) {
             case ALL:
-                bookings = bookingRepository.findByBookerIdOrderByStartDesc(bookerId);
+                bookings = bookingRepository.findByBookerId(bookerId, Sort.by(Sort.Direction.DESC, "start"));
                 break;
             case PAST:
-                bookings = bookingRepository.findByBookerIdAndEndIsBeforeOrderByStartDesc(
-                                bookerId, LocalDateTime.now());
+                bookings = bookingRepository.findByBookerIdAndEndIsBefore(
+                                bookerId, LocalDateTime.now(), Sort.by(Sort.Direction.DESC, "start"));
                 break;
             case FUTURE:
-                bookings = bookingRepository.findByBookerIdAndStartIsAfterOrderByStartDesc(
-                                bookerId, LocalDateTime.now());
+                bookings = bookingRepository.findByBookerIdAndStartIsAfter(
+                                bookerId, LocalDateTime.now(), Sort.by(Sort.Direction.DESC, "start"));
                 break;
             case CURRENT:
-                bookings =  bookingRepository.findByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(
-                            bookerId, LocalDateTime.now(), LocalDateTime.now());
+                bookings =  bookingRepository.findByBookerIdAndStartIsBeforeAndEndIsAfter(
+                            bookerId, LocalDateTime.now(), LocalDateTime.now(), Sort.by(Sort.Direction.DESC, "start"));
                 break;
             case WAITING:
-                bookings = bookingRepository.findByBookerIdAndStatusOrderByStartDesc(bookerId, Status.WAITING);
+                bookings = bookingRepository.findByBookerIdAndStatus(
+                        bookerId, Status.WAITING, Sort.by(Sort.Direction.DESC, "start"));
                 break;
             case REJECTED:
-                bookings = bookingRepository.findByBookerIdAndStatusOrderByStartDesc(bookerId, Status.REJECTED);
+                bookings = bookingRepository.findByBookerIdAndStatus(
+                        bookerId, Status.REJECTED, Sort.by(Sort.Direction.DESC, "start"));
                 break;
             default:
                 throw new IllegalArgumentException();
@@ -128,22 +132,24 @@ public class BookingServiceImpl implements BookingService {
                 bookings = bookingRepository.findByItemOwnerIdOrderByStartDesc(userId);
                 break;
             case PAST:
-                bookings = bookingRepository.findByItemOwnerIdAndEndIsBeforeOrderByStartDesc(
-                        userId, LocalDateTime.now());
+                bookings = bookingRepository.findByItemOwnerIdAndEndIsBefore(
+                        userId, LocalDateTime.now(),  Sort.by(Sort.Direction.DESC, "start"));
                 break;
             case FUTURE:
-                bookings = bookingRepository.findByItemOwnerIdAndStartIsAfterOrderByStartDesc(
-                        userId, LocalDateTime.now());
+                bookings = bookingRepository.findByItemOwnerIdAndStartIsAfter(
+                        userId, LocalDateTime.now(),  Sort.by(Sort.Direction.DESC, "start"));
                 break;
             case CURRENT:
-                bookings =  bookingRepository.findByItemOwnerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(
-                        userId, LocalDateTime.now(), LocalDateTime.now());
+                bookings =  bookingRepository.findByItemOwnerIdAndStartIsBeforeAndEndIsAfter(
+                        userId, LocalDateTime.now(), LocalDateTime.now(),  Sort.by(Sort.Direction.DESC, "start"));
                 break;
             case WAITING:
-                bookings = bookingRepository.findByItemOwnerIdAndStatusOrderByStartDesc(userId, Status.WAITING);
+                bookings = bookingRepository.findByItemOwnerIdAndStatus(
+                        userId, Status.WAITING, Sort.by(Sort.Direction.DESC, "start"));
                 break;
             case REJECTED:
-                bookings = bookingRepository.findByItemOwnerIdAndStatusOrderByStartDesc(userId, Status.REJECTED);
+                bookings = bookingRepository.findByItemOwnerIdAndStatus(
+                        userId, Status.REJECTED,  Sort.by(Sort.Direction.DESC, "start"));
                 break;
             default:
                 throw new IllegalArgumentException();
@@ -174,10 +180,12 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingCreationDto getById(Long id) {
-        return BookingMapper.toCreationDto(bookingRepository.findById(id).orElseThrow(() -> new BookingNotFoundException(id)));
+        return BookingMapper.toCreationDto(
+                bookingRepository.findById(id).orElseThrow(() -> new BookingNotFoundException(id)));
     }
 
     @Override
+    @Transactional
     public void removeById(Long id) {
         if (!bookingRepository.existsById(id)) {
             throw new BookingNotFoundException(id);

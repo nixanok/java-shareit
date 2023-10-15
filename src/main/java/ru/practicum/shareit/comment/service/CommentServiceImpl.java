@@ -3,6 +3,7 @@ package ru.practicum.shareit.comment.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -22,22 +23,20 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Transactional(readOnly = true)
 public class CommentServiceImpl implements CommentService {
 
-    @Autowired
     private final CommentRepository commentRepository;
 
-    @Autowired
     private final UserRepository userRepository;
 
-    @Autowired
     private final BookingRepository bookingRepository;
 
-    @Autowired
     private final ItemRepository itemRepository;
 
     @Override
+    @Transactional
     public CommentDto postComment(Long itemId, Long authorId, CommentDto commentDto) {
         commentDto.setCreated(LocalDateTime.now());
         Optional<Item> optionalItem = itemRepository.findById(itemId);

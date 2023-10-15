@@ -22,13 +22,13 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public UserDto createUser(@RequestBody @Validated({ BasicInfo.class, EmailInfo.class }) final UserDto user) {
+    public UserDto createUser(@RequestBody @Validated({ BasicInfo.class, EmailInfo.class }) UserDto user) {
         log.debug("Request \"createUser\"is called.");
         return userService.create(user);
     }
 
     @PatchMapping(path = "/{userId}")
-    public UserDto patchUser(@PathVariable(name = "userId") final Long id,
+    public UserDto patchUser(@PathVariable(name = "userId") long id,
                              @RequestBody @Validated({EmailInfo.class}) final UserDto user) {
         log.debug("Request \"patchUser\"is called.");
         return userService.patch(id, user);
@@ -41,13 +41,13 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public UserDto getUser(@PathVariable(name = "userId") Long id) {
+    public UserDto getUser(@PathVariable(name = "userId") long id) {
         log.debug("Request \"getUser\"is called.");
         return userService.getById(id);
     }
 
     @DeleteMapping("/{userId}")
-    public void removeUserById(@PathVariable(name = "userId") Long id) {
+    public void removeUserById(@PathVariable(name = "userId") long id) {
         log.debug("Request \"removeUserById\"is called.");
         userService.removeById(id);
     }

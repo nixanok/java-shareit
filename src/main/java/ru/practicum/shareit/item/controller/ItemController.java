@@ -24,7 +24,7 @@ public class ItemController {
 
     @PostMapping
     public ItemDto createItem(
-            @RequestBody @Validated(BasicUserInfo.class) final ItemDto item,
+            @RequestBody @Validated(BasicUserInfo.class) ItemDto item,
             @NotNull @RequestHeader("X-Sharer-User-Id") Long ownerId
     ) {
         log.debug("Request \"createItem\"is called.");
@@ -33,7 +33,7 @@ public class ItemController {
 
     @PatchMapping(path = "/{itemId}")
     public ItemDto patchItem(
-            @PathVariable(name = "itemId") final Long id,
+            @PathVariable(name = "itemId") long id,
                           @RequestBody final ItemDto item,
                           @NotNull @RequestHeader("X-Sharer-User-Id") Long ownerId
     ) {
@@ -42,7 +42,7 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemBookingsDto> getItemsByOwnerId(@RequestHeader("X-Sharer-User-Id") @NotNull Long ownerId) {
+    public List<ItemBookingsDto> getItemsByOwnerId(@RequestHeader("X-Sharer-User-Id") long ownerId) {
         log.debug("Request \"getItemsByOwnerId\"is called.");
         return itemService.getByOwnerId(ownerId);
     }
@@ -54,13 +54,15 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemBookingsDto getItem(@RequestHeader("X-Sharer-User-Id") @NotNull Long ownerId, @PathVariable(name = "itemId") Long id) {
+    public ItemBookingsDto getItem(
+            @RequestHeader("X-Sharer-User-Id") long ownerId,
+            @PathVariable(name = "itemId") long id) {
         log.debug("Request \"getItem\"is called.");
         return itemService.getById(id, ownerId);
     }
 
     @DeleteMapping("/{itemId}")
-    public void removeItemById(@PathVariable(name = "itemId") Long id) {
+    public void removeItemById(@PathVariable(name = "itemId") long id) {
         log.debug("Request \"removeItemById\"is called.");
         itemService.removeById(id);
     }
