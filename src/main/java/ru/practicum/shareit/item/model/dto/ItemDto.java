@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.item.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
@@ -15,14 +15,14 @@ public class ItemDto {
 
     private Long id;
 
-    @NotBlank(message = "Name cannot be blank.", groups = BasicInfo.class)
-    @Size(max = 100, message = "Max name length = 100.", groups = BasicInfo.class)
+    @NotBlank(message = "Name cannot be blank.", groups = BasicUserInfo.class)
+    @Size(max = 100, message = "Max name length = 100.", groups = BasicUserInfo.class)
     private String name;
 
-    @NotBlank(message = "Description cannot be blank.", groups = BasicInfo.class)
+    @NotBlank(message = "Description cannot be blank.", groups = BasicUserInfo.class)
     private String description;
 
-    @NotNull(message = "Available cannot be null.", groups = BasicInfo.class)
+    @NotNull(message = "Available cannot be null.", groups = BasicUserInfo.class)
     private Boolean available;
 
 }
