@@ -7,7 +7,6 @@ public class WithoutSpacesValidator implements ConstraintValidator<WithoutSpaces
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        return !value.contains(" ");
+        return value == null || !value.contains(" ");
     }
-
 }

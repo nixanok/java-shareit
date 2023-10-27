@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import ru.practicum.shareit.item.exception.ItemNotAvailableException;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.exception.PaginationParamException;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -83,73 +85,101 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingSendingDto> getBookingsByBookerId(Long bookerId, State state) {
+    public List<BookingSendingDto> getBookingsByBookerId(Long bookerId, State state, int from, int size) {
         if (!userRepository.existsById(bookerId)) {
             throw new UserNotFoundException(bookerId);
         }
-        List<Booking> bookings;
+
+        if (from < 0 || size <= 0) {
+            throw new PaginationParamException("Params size and from cannot be <= 0.");
+        }
+        Iterable<Booking> bookings;
+        PageRequest pageRequest = PageRequest.of(
+                from > 0 ? from / size : 0,
+                size,
+                Sort.by(Sort.Direction.DESC, "start")
+        );
         switch (state) {
             case ALL:
-                bookings = bookingRepository.findByBookerId(bookerId, Sort.by(Sort.Direction.DESC, "start"));
+                bookings = bookingRepository.findByBookerId(bookerId, pageRequest);
                 break;
             case PAST:
                 bookings = bookingRepository.findByBookerIdAndEndIsBefore(
-                                bookerId, LocalDateTime.now(), Sort.by(Sort.Direction.DESC, "start"));
+                                bookerId,
+                                LocalDateTime.now(),
+                                pageRequest
+                );
                 break;
             case FUTURE:
                 bookings = bookingRepository.findByBookerIdAndStartIsAfter(
-                                bookerId, LocalDateTime.now(), Sort.by(Sort.Direction.DESC, "start"));
+                                bookerId,
+                                LocalDateTime.now(),
+                                pageRequest
+                );
                 break;
             case CURRENT:
                 bookings =  bookingRepository.findByBookerIdAndStartIsBeforeAndEndIsAfter(
-                            bookerId, LocalDateTime.now(), LocalDateTime.now(), Sort.by(Sort.Direction.DESC, "start"));
+                                bookerId,
+                                LocalDateTime.now(),
+                                LocalDateTime.now(),
+                                pageRequest
+                );
                 break;
             case WAITING:
                 bookings = bookingRepository.findByBookerIdAndStatus(
-                        bookerId, Status.WAITING, Sort.by(Sort.Direction.DESC, "start"));
+                                bookerId,
+                                Status.WAITING,
+                                pageRequest);
                 break;
             case REJECTED:
                 bookings = bookingRepository.findByBookerIdAndStatus(
-                        bookerId, Status.REJECTED, Sort.by(Sort.Direction.DESC, "start"));
+                        bookerId,
+                        Status.REJECTED,
+                        PageRequest.of(from, size));
                 break;
             default:
                 throw new IllegalArgumentException();
         }
-        return bookings
-                .stream()
-                .map(BookingMapper::toSendingDto)
-                .collect(Collectors.toList());
+        return BookingMapper.toSendingDto(bookings);
     }
 
     @Override
-    public List<BookingSendingDto> getBookingsItemsByUserId(Long userId, State state) {
+    public List<BookingSendingDto> getBookingsItemsByUserId(Long userId, State state, int from, int size) {
         if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException(userId);
         }
+        if (from < 0 || size <= 0) {
+            throw new PaginationParamException("Params size and from cannot be <= 0.");
+        }
         List<Booking> bookings;
+        PageRequest pageRequest = PageRequest.of(
+                from > 0 ? from / size : 0,
+                size,
+                Sort.by(Sort.Direction.DESC, "start")
+        );
         switch (state) {
             case ALL:
-                bookings = bookingRepository.findByItemOwnerIdOrderByStartDesc(userId);
+                bookings = bookingRepository.findByItemOwnerId(userId, pageRequest);
                 break;
             case PAST:
                 bookings = bookingRepository.findByItemOwnerIdAndEndIsBefore(
-                        userId, LocalDateTime.now(),  Sort.by(Sort.Direction.DESC, "start"));
+                        userId, LocalDateTime.now(),  pageRequest);
                 break;
             case FUTURE:
                 bookings = bookingRepository.findByItemOwnerIdAndStartIsAfter(
-                        userId, LocalDateTime.now(),  Sort.by(Sort.Direction.DESC, "start"));
+                        userId, LocalDateTime.now(),  pageRequest);
                 break;
             case CURRENT:
                 bookings =  bookingRepository.findByItemOwnerIdAndStartIsBeforeAndEndIsAfter(
-                        userId, LocalDateTime.now(), LocalDateTime.now(),  Sort.by(Sort.Direction.DESC, "start"));
+                        userId, LocalDateTime.now(), LocalDateTime.now(),  pageRequest);
                 break;
             case WAITING:
                 bookings = bookingRepository.findByItemOwnerIdAndStatus(
-                        userId, Status.WAITING, Sort.by(Sort.Direction.DESC, "start"));
+                        userId, Status.WAITING, pageRequest);
                 break;
             case REJECTED:
                 bookings = bookingRepository.findByItemOwnerIdAndStatus(
-                        userId, Status.REJECTED,  Sort.by(Sort.Direction.DESC, "start"));
+                        userId, Status.REJECTED,  pageRequest);
                 break;
             default:
                 throw new IllegalArgumentException();

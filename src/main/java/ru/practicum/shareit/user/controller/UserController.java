@@ -5,9 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.user.dto.BasicInfo;
-import ru.practicum.shareit.user.dto.EmailInfo;
-import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.model.dto.BasicInfo;
+import ru.practicum.shareit.user.model.dto.EmailInfo;
+import ru.practicum.shareit.user.model.dto.PatchInfo;
+import ru.practicum.shareit.user.model.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class UserController {
 
     @PatchMapping(path = "/{userId}")
     public UserDto patchUser(@PathVariable(name = "userId") long id,
-                             @RequestBody @Validated({EmailInfo.class}) final UserDto user) {
+                             @RequestBody @Validated({ PatchInfo.class }) final UserDto user) {
         log.debug("Request \"patchUser\"is called.");
         return userService.patch(id, user);
     }

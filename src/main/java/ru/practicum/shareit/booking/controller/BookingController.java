@@ -56,19 +56,23 @@ public class BookingController {
     @GetMapping
     public List<BookingSendingDto> getBookingsByBookerId(
         @RequestHeader("X-Sharer-User-Id") long bookerId,
-        @RequestParam(name = "state", defaultValue = "ALL") State state
+        @RequestParam(name = "state", defaultValue = "ALL") State state,
+        @RequestParam(name = "from", defaultValue = "0") int from,
+        @RequestParam(name = "size", defaultValue = "10") int size
     ) {
         log.debug("Request \"getBookingsByUserId\"is called.");
-        return bookingService.getBookingsByBookerId(bookerId, state);
+        return bookingService.getBookingsByBookerId(bookerId, state, from, size);
     }
 
     @GetMapping("/owner")
     public List<BookingSendingDto> getBookingsItemsByUserId(
             @RequestHeader("X-Sharer-User-Id") long ownerId,
-            @RequestParam(name = "state", defaultValue = "ALL") State state
+            @RequestParam(name = "state", defaultValue = "ALL") State state,
+            @RequestParam(name = "from", defaultValue = "0") int from,
+            @RequestParam(name = "size", defaultValue = "10") int size
     ) {
         log.debug("Request \"getBookingsItemsByUserId\"is called.");
-        return bookingService.getBookingsItemsByUserId(ownerId, state);
+        return bookingService.getBookingsItemsByUserId(ownerId, state, from, size);
     }
 
 }

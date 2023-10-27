@@ -1,6 +1,6 @@
 package ru.practicum.shareit.user.tool;
 
-import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.model.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
 public class UserMapper {
@@ -15,7 +15,6 @@ public class UserMapper {
 
     public static User fromDto(final UserDto userDto) {
         return User.builder()
-                .id(userDto.getId())
                 .name(userDto.getName())
                 .email(userDto.getEmail())
                 .build();

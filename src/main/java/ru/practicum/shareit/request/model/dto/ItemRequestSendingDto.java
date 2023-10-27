@@ -1,15 +1,20 @@
-package ru.practicum.shareit.request.dto;
+package ru.practicum.shareit.request.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import ru.practicum.shareit.item.model.dto.ItemDto;
+import lombok.NoArgsConstructor;
 import ru.practicum.shareit.item.model.dto.ItemRequestDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@Builder(toBuilder = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ItemRequestSendingDto {
 
     private Long id;

@@ -1,14 +1,15 @@
 package ru.practicum.shareit.item.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ItemDto {
@@ -24,5 +25,7 @@ public class ItemDto {
 
     @NotNull(message = "Available cannot be null.", groups = BasicUserInfo.class)
     private Boolean available;
+
+    private Long requestId;
 
 }

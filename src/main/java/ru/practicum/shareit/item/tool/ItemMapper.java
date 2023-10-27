@@ -7,6 +7,7 @@ import ru.practicum.shareit.comment.tool.CommentMapper;
 import ru.practicum.shareit.item.model.dto.ItemBookingsDto;
 import ru.practicum.shareit.item.model.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.model.dto.ItemRequestDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ public final class ItemMapper {
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
+                .requestId(item.getRequest() == null ? null : item.getRequest().getId())
                 .build();
     }
 
@@ -59,5 +61,16 @@ public final class ItemMapper {
                         .collect(Collectors.toList()))
                 .build();
     }
+
+    public static ItemRequestDto toItemRequestDto(final Item item) {
+        return ItemRequestDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .requestId(item.getRequest() == null ? null : item.getRequest().getId())
+                .build();
+    }
+
 
 }

@@ -21,7 +21,7 @@ public interface BookingService {
 
     BookingSendingDto get(Long bookingId, Long userId);
 
-    List<BookingSendingDto> getBookingsByBookerId(Long ownerId, State state);
+    List<BookingSendingDto> getBookingsByBookerId(Long ownerId, State state, int from, int size);
 
-    List<BookingSendingDto> getBookingsItemsByUserId(Long userId, State state);
+    List<BookingSendingDto> getBookingsItemsByUserId(Long userId, State state, int from, int size);
 }

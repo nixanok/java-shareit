@@ -16,6 +16,9 @@ import ru.practicum.shareit.item.exception.ItemNotFoundException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.tool.ItemMapper;
+import ru.practicum.shareit.request.exception.RequestNotFoundException;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.model.User;
@@ -37,6 +40,8 @@ public class ItemServiceImpl implements ItemService {
 
     private final BookingRepository bookingRepository;
 
+    private final ItemRequestRepository itemRequestRepository;
+
     @Override
     @Transactional
     public ItemDto create(ItemDto itemDto, Long ownerId) {
@@ -47,6 +52,14 @@ public class ItemServiceImpl implements ItemService {
         User user = optionalUser.get();
         Item item = ItemMapper.fromDto(itemDto);
         item.setOwner(user);
+        if (itemDto.getRequestId() != null) {
+            Optional<ItemRequest> optionalItemRequest = itemRequestRepository.findById(itemDto.getRequestId());
+            if (optionalItemRequest.isEmpty()) {
+                throw new RequestNotFoundException(itemDto.getRequestId());
+            }
+            ItemRequest itemRequest = optionalItemRequest.get();
+            item.setRequest(itemRequest);
+        }
         return ItemMapper.toDto(itemRepository.save(item));
     }
 
@@ -153,6 +166,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public void removeById(Long id) {
+        if (!itemRepository.existsById(id)) {
+            throw new ItemNotFoundException(id);
+        }
         itemRepository.deleteById(id);
     }
 

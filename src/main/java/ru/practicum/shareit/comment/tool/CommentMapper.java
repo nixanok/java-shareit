@@ -9,7 +9,7 @@ public final class CommentMapper {
         return CommentDto.builder()
                 .id(comment.getId())
                 .text(comment.getText())
-                .authorName(comment.getAuthor().getName())
+                .authorName(comment.getAuthor() == null ? null : comment.getAuthor().getName())
                 .created(comment.getCreated())
                 .build();
     }

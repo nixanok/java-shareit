@@ -34,8 +34,8 @@ public class ItemController {
     @PatchMapping(path = "/{itemId}")
     public ItemDto patchItem(
             @PathVariable(name = "itemId") long id,
-                          @RequestBody final ItemDto item,
-                          @NotNull @RequestHeader("X-Sharer-User-Id") Long ownerId
+            @RequestBody final ItemDto item,
+            @NotNull @RequestHeader("X-Sharer-User-Id") Long ownerId
     ) {
         log.debug("Request \"patchItem\"is called.");
         return itemService.patch(id, item, ownerId);

@@ -8,6 +8,9 @@ import ru.practicum.shareit.booking.model.dto.BookingSendingDto;
 import ru.practicum.shareit.item.tool.ItemMapper;
 import ru.practicum.shareit.user.tool.UserMapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class BookingMapper {
 
     private BookingMapper() {
@@ -41,12 +44,20 @@ public final class BookingMapper {
                 .build();
     }
 
+    public static List<BookingSendingDto> toSendingDto(final Iterable<Booking> bookings) {
+        List<BookingSendingDto> bookingSendingDtoList = new ArrayList<>();
+        for (Booking booking : bookings) {
+            bookingSendingDtoList.add(toSendingDto(booking));
+        }
+        return bookingSendingDtoList;
+    }
+
     public static BookingApproveDto toApproveDto(final Booking booking) {
         return BookingApproveDto.builder()
                 .id(booking.getId())
                 .start(booking.getStart())
                 .end(booking.getEnd())
-                .booker(UserMapper.toDto(booking.getBooker()))
+                .booker(booking.getBooker() == null ? null : UserMapper.toDto(booking.getBooker()))
                 .status(booking.getStatus())
                 .item(ItemMapper.toDto(booking.getItem()))
                 .build();
@@ -55,7 +66,7 @@ public final class BookingMapper {
     public static BookingItemDto toBookingItemDto(final Booking booking) {
         return booking == null ? null : BookingItemDto.builder()
                 .id(booking.getId())
-                .bookerId(booking.getBooker().getId())
+                .bookerId(booking.getBooker() == null ? null : booking.getBooker().getId())
                 .build();
     }
 

@@ -15,6 +15,8 @@ import ru.practicum.shareit.booking.exception.OwnerNotFoundException;
 import ru.practicum.shareit.comment.exception.CommentException;
 import ru.practicum.shareit.item.exception.ItemNotAvailableException;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
+import ru.practicum.shareit.request.exception.PaginationParamException;
+import ru.practicum.shareit.request.exception.RequestNotFoundException;
 import ru.practicum.shareit.user.exception.EmailAlreadyExistsException;
 import ru.practicum.shareit.user.exception.IdUserNotFoundException;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
@@ -62,7 +64,8 @@ public final class ErrorController {
             UserNotFoundException.class,
             IdUserNotFoundException.class,
             BookingNotFoundException.class,
-            OwnerNotFoundException.class
+            OwnerNotFoundException.class,
+            RequestNotFoundException.class
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundError(final RuntimeException e) {
@@ -81,7 +84,8 @@ public final class ErrorController {
             BookingTimeException.class,
             ItemNotAvailableException.class,
             BookingStatusException.class,
-            CommentException.class
+            CommentException.class,
+            PaginationParamException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBadRequest(final RuntimeException e) {

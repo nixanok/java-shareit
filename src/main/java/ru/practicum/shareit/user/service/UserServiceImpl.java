@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.model.dto.UserDto;
 import ru.practicum.shareit.user.exception.EmailAlreadyExistsException;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.model.User;
@@ -91,4 +91,5 @@ public class UserServiceImpl implements UserService {
         }
         userRepository.deleteById(id);
     }
+
 }
