@@ -20,7 +20,7 @@ public class UserDto {
     @WithoutSpaces(message = "Name cannot has spaces.", groups = { BasicInfo.class, PatchInfo.class })
     private String name;
 
-    @Email(message = "Email should be valid.", groups = { EmailInfo.class, PatchInfo.class} )
+    @Email(message = "Email should be valid.", groups = { EmailInfo.class, PatchInfo.class})
     @NotNull(message = "Email cannot be null.", groups = EmailInfo.class)
     private String email;
 
