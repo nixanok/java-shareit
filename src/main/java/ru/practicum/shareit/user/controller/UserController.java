@@ -11,11 +11,13 @@ import ru.practicum.shareit.user.model.dto.PatchInfo;
 import ru.practicum.shareit.user.model.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
+@Validated
 @Slf4j
 public class UserController {
 
@@ -29,7 +31,7 @@ public class UserController {
     }
 
     @PatchMapping(path = "/{userId}")
-    public UserDto patchUser(@PathVariable(name = "userId") long id,
+    public UserDto patchUser(@PositiveOrZero @PathVariable(name = "userId") long id,
                              @RequestBody @Validated({ PatchInfo.class }) final UserDto user) {
         log.debug("Request \"patchUser\"is called.");
         return userService.patch(id, user);
@@ -42,13 +44,13 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public UserDto getUser(@PathVariable(name = "userId") long id) {
+    public UserDto getUser(@PositiveOrZero @PathVariable(name = "userId") long id) {
         log.debug("Request \"getUser\"is called.");
         return userService.getById(id);
     }
 
     @DeleteMapping("/{userId}")
-    public void removeUserById(@PathVariable(name = "userId") long id) {
+    public void removeUserById(@PositiveOrZero @PathVariable(name = "userId") long id) {
         log.debug("Request \"removeUserById\"is called.");
         userService.removeById(id);
     }

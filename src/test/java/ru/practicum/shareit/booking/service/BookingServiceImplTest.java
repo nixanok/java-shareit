@@ -480,12 +480,12 @@ public class BookingServiceImplTest {
         booking2.setEnd(currentTime.plusHours(1));
 
         List<Booking> bookingList = List.of(booking1, booking2);
-
+        Page<Booking> bookings = new PageImpl<>(bookingList);
         when(userRepository.existsById(bookerId)).thenReturn(true);
 
         when(bookingRepository.findByBookerIdAndStartIsBeforeAndEndIsAfter(
                 eq(bookerId), any(LocalDateTime.class), any(LocalDateTime.class), any(PageRequest.class)))
-                .thenReturn(bookingList);
+                .thenReturn(bookings);
 
         List<BookingSendingDto> result = bookingService.getBookingsByBookerId(bookerId, state, from, size);
 
@@ -598,11 +598,12 @@ public class BookingServiceImplTest {
         booking2.setBooker(owner);
 
         List<Booking> bookingList = List.of(booking1, booking2);
+        Page<Booking> bookings = new PageImpl<>(bookingList);
 
         when(userRepository.existsById(ownerId)).thenReturn(true);
         when(userRepository.findById(ownerId)).thenReturn(Optional.of(owner));
         when(bookingRepository.findByItemOwnerId(eq(ownerId), any(PageRequest.class)))
-                .thenReturn(bookingList);
+                .thenReturn(bookings);
 
         List<BookingSendingDto> result = bookingService.getBookingsItemsByUserId(ownerId, state, from, size);
 
@@ -647,11 +648,12 @@ public class BookingServiceImplTest {
         booking2.setEnd(LocalDateTime.now().minusDays(1));
 
         List<Booking> bookingList = List.of(booking1, booking2);
+        Page<Booking> bookings = new PageImpl<>(bookingList);
 
         when(userRepository.existsById(ownerId)).thenReturn(true);
         when(userRepository.findById(ownerId)).thenReturn(Optional.of(owner));
         when(bookingRepository.findByItemOwnerIdAndEndIsBefore(eq(ownerId), any(LocalDateTime.class), any(PageRequest.class)))
-                .thenReturn(bookingList);
+                .thenReturn(bookings);
 
         List<BookingSendingDto> result = bookingService.getBookingsItemsByUserId(ownerId, state, from, size);
 
@@ -696,12 +698,13 @@ public class BookingServiceImplTest {
         booking2.setStart(LocalDateTime.now().plusDays(1));
 
         List<Booking> bookingList = List.of(booking1, booking2);
+        Page<Booking> bookings = new PageImpl<>(bookingList);
 
         when(userRepository.existsById(ownerId)).thenReturn(true);
         when(userRepository.findById(ownerId)).thenReturn(Optional.of(owner));
         when(bookingRepository.findByItemOwnerIdAndStartIsAfter(
                 eq(ownerId), any(LocalDateTime.class), any(PageRequest.class)))
-                .thenReturn(bookingList);
+                .thenReturn(bookings);
 
         List<BookingSendingDto> result = bookingService.getBookingsItemsByUserId(ownerId, state, from, size);
 
@@ -750,12 +753,13 @@ public class BookingServiceImplTest {
         booking2.setEnd(now.plusHours(1));
 
         List<Booking> bookingList = List.of(booking1, booking2);
+        Page<Booking> bookings = new PageImpl<>(bookingList);
 
         when(userRepository.existsById(ownerId)).thenReturn(true);
         when(userRepository.findById(ownerId)).thenReturn(Optional.of(owner));
         when(bookingRepository.findByItemOwnerIdAndStartIsBeforeAndEndIsAfter(
                 eq(ownerId), any(LocalDateTime.class), any(LocalDateTime.class), any(PageRequest.class)))
-                .thenReturn(bookingList);
+                .thenReturn(bookings);
 
         List<BookingSendingDto> result = bookingService.getBookingsItemsByUserId(ownerId, state, from, size);
 

@@ -1,11 +1,13 @@
 package ru.practicum.shareit.comment.tool;
 
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.comment.model.Comment;
 import ru.practicum.shareit.comment.model.dto.CommentDto;
 
-public final class CommentMapper {
+@UtilityClass
+public class CommentMapper {
 
-    public static CommentDto toDto(Comment comment) {
+    public CommentDto toDto(Comment comment) {
         return CommentDto.builder()
                 .id(comment.getId())
                 .text(comment.getText())
@@ -14,7 +16,7 @@ public final class CommentMapper {
                 .build();
     }
 
-    public static Comment fromDto(CommentDto comment) {
+    public Comment fromDto(CommentDto comment) {
         return Comment.builder()
                 .id(comment.getId())
                 .text(comment.getText())

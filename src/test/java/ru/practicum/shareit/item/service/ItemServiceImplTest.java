@@ -440,7 +440,7 @@ public class ItemServiceImplTest {
         when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
         when(bookingRepository.findFirstByItemIdAndStartIsBeforeAndStatus(
                 eq(itemId), any(LocalDateTime.class), eq(Status.APPROVED), any(Sort.class)))
-                .thenReturn(approvedBooking1);
+                .thenReturn(Optional.of(approvedBooking1));
 
         ItemBookingsDto result = itemService.getById(itemId, ownerId);
         when(commentRepository.findAllByItemIdOrderByCreated(itemId)).thenReturn(comments);

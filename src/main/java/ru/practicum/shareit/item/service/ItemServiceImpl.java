@@ -138,18 +138,24 @@ public class ItemServiceImpl implements ItemService {
             throw new ItemNotFoundException(id);
         }
         if (item.get().getOwner().getId().equals(ownerId)) {
+            Optional<Booking> beforeBooking = bookingRepository.findFirstByItemIdAndStartIsBeforeAndStatus(
+                    id,
+                    LocalDateTime.now(),
+                    Status.APPROVED,
+                    Sort.by(Sort.Direction.DESC, "start")
+            );
+            Optional<Booking> afterBooking = bookingRepository.findFirstByItemIdAndStartIsAfterAndStatus(
+                    id,
+                    LocalDateTime.now(),
+                    Status.APPROVED,
+                    Sort.by(Sort.Direction.ASC, "start")
+            );
+
             return ItemMapper.toBookingsDto(item.get(),
-                    bookingRepository.findFirstByItemIdAndStartIsBeforeAndStatus(
-                            id,
-                            LocalDateTime.now(),
-                            Status.APPROVED,
-                            Sort.by(Sort.Direction.DESC, "start")),
-                    bookingRepository.findFirstByItemIdAndStartIsAfterAndStatus(
-                            id,
-                            LocalDateTime.now(),
-                            Status.APPROVED,
-                            Sort.by(Sort.Direction.ASC, "start")),
+                    beforeBooking.orElse(null),
+                    afterBooking.orElse(null),
                     getComments(item.get().getId()));
+
         } else {
             return ItemMapper.toBookingsDto(item.get(),
                    null,

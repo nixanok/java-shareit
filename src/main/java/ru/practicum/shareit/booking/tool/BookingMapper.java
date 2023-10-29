@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.tool;
 
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.dto.BookingApproveDto;
 import ru.practicum.shareit.booking.model.dto.BookingCreationDto;
@@ -11,12 +12,10 @@ import ru.practicum.shareit.user.tool.UserMapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class BookingMapper {
+@UtilityClass
+public class BookingMapper {
 
-    private BookingMapper() {
-    }
-
-    public static BookingCreationDto toCreationDto(final Booking booking) {
+    public  BookingCreationDto toCreationDto(final Booking booking) {
         return BookingCreationDto.builder()
                 .id(booking.getId())
                 .start(booking.getStart())
@@ -25,7 +24,7 @@ public final class BookingMapper {
                 .build();
     }
 
-    public static Booking fromCreationDto(final BookingCreationDto bookingCreationDto) {
+    public Booking fromCreationDto(final BookingCreationDto bookingCreationDto) {
         return Booking.builder()
                 .id(bookingCreationDto.getId())
                 .start(bookingCreationDto.getStart())

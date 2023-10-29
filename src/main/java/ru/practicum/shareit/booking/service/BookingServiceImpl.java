@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -151,7 +152,7 @@ public class BookingServiceImpl implements BookingService {
         if (from < 0 || size <= 0) {
             throw new PaginationParamException("Params size and from cannot be <= 0.");
         }
-        List<Booking> bookings;
+        Page<Booking> bookings;
         PageRequest pageRequest = PageRequest.of(
                 from > 0 ? from / size : 0,
                 size,

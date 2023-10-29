@@ -10,7 +10,7 @@ public class UserTest {
         User user1 = new User();
         user1.setEmail("user@example.com");
 
-        assertTrue(user1.equals(user1));
+        assertEquals(user1, user1);
     }
 
     @Test
@@ -21,7 +21,7 @@ public class UserTest {
         User user2 = new User();
         user2.setEmail("user@example.com");
 
-        assertTrue(user1.equals(user2));
+        assertEquals(user1, user2);
     }
 
     @Test
@@ -32,7 +32,7 @@ public class UserTest {
         User user2 = new User();
         user2.setEmail("user2@example.com");
 
-        assertFalse(user1.equals(user2));
+        assertNotEquals(user1, user2);
     }
 
     @Test

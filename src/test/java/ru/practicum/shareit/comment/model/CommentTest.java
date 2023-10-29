@@ -17,9 +17,9 @@ public class CommentTest {
         Comment comment3 = new Comment();
         comment3.setId(2L);
 
-        assertTrue(comment1.equals(comment2));
+        assertEquals(comment1, comment2);
 
-        assertFalse(comment1.equals(comment3));
+        assertNotEquals(comment1, comment3);
     }
 
     @Test

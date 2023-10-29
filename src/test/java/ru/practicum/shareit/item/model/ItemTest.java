@@ -10,7 +10,7 @@ public class ItemTest {
         Item item1 = new Item();
         item1.setId(1L);
 
-        assertTrue(item1.equals(item1));
+        assertEquals(item1, item1);
     }
 
     @Test
@@ -21,7 +21,7 @@ public class ItemTest {
         Item item2 = new Item();
         item2.setId(1L);
 
-        assertTrue(item1.equals(item2));
+        assertEquals(item1, item2);
     }
 
     @Test

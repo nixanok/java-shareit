@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.tool;
 
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.tool.BookingMapper;
 import ru.practicum.shareit.comment.model.Comment;
@@ -12,12 +13,10 @@ import ru.practicum.shareit.item.model.dto.ItemRequestDto;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public final class ItemMapper {
+@UtilityClass
+public class ItemMapper {
 
-    private ItemMapper() {
-    }
-
-    public static ItemDto toDto(final Item item) {
+    public ItemDto toDto(final Item item) {
         return ItemDto.builder()
                 .id(item.getId())
                 .name(item.getName())
@@ -27,7 +26,7 @@ public final class ItemMapper {
                 .build();
     }
 
-    public static Item fromDto(final ItemDto itemDto) {
+    public Item fromDto(final ItemDto itemDto) {
         return Item.builder()
                 .id(itemDto.getId())
                 .name(itemDto.getName())
@@ -36,7 +35,7 @@ public final class ItemMapper {
                 .build();
     }
 
-    public static ItemBookingsDto toBookingsDto(final Item item, Booking last, Booking next) {
+    public ItemBookingsDto toBookingsDto(final Item item, Booking last, Booking next) {
         return ItemBookingsDto.builder()
                 .id(item.getId())
                 .name(item.getName())
@@ -47,7 +46,7 @@ public final class ItemMapper {
                 .build();
     }
 
-    public static ItemBookingsDto toBookingsDto(final Item item, Booking last, Booking next, List<Comment> comments) {
+    public ItemBookingsDto toBookingsDto(final Item item, Booking last, Booking next, List<Comment> comments) {
         return ItemBookingsDto.builder()
                 .id(item.getId())
                 .name(item.getName())
