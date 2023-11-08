@@ -1,4 +1,4 @@
-package ru.practicum.shareit.request.model.dto;
+package ru.practicum.shareit.item.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -14,13 +14,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ItemRequestCreationDto {
+public class CommentDto {
 
     private Long id;
 
-    private String description;
+    @NotBlank
+    private String text;
 
-    private Long requesterId;
+    private String authorName;
 
     private LocalDateTime created;
 }

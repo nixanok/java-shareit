@@ -1,4 +1,4 @@
-package ru.practicum.shareit.request.model.dto;
+package ru.practicum.shareit.request.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -14,10 +14,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ItemRequestCreationDto {
+public class ItemRequestDto {
 
     private Long id;
 
+    @NotBlank(message = "Description cannot be blank.")
     private String description;
 
     private Long requesterId;
