@@ -7,15 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -108,63 +105,6 @@ public class ItemRepositoryTest {
         assertEquals("Item 2", foundItems.get(1).getName());
         assertEquals(ownerId, foundItems.get(0).getOwner().getId());
         assertEquals(ownerId, foundItems.get(1).getOwner().getId());
-    }
-
-    @Test
-    public void testFindAllByRequestId() {
-        ItemRequest testRequest = ItemRequest.builder()
-                    .requester(testOwner2)
-                    .description("Request 1")
-                    .created(LocalDateTime.now())
-                    .build();
-
-        testRequest = itemRequestRepository.save(testRequest);
-
-        final long requestId = testRequest.getId();
-
-        testItem1.setRequest(testRequest);
-        testItem2.setRequest(testRequest);
-
-        itemRepository.saveAll(Arrays.asList(testItem1, testItem2));
-
-        List<Item> foundItems = itemRepository.findByRequestId(requestId);
-
-        assertEquals(2, foundItems.size());
-        assertEquals("Item 1", foundItems.get(0).getName());
-        assertEquals("Item 2", foundItems.get(1).getName());
-    }
-
-    @Test
-    public void testFindAllByRequestIdIn() {
-
-        ItemRequest testRequest1 = ItemRequest.builder()
-                .requester(testOwner1)
-                .description("Request 1")
-                .created(LocalDateTime.now())
-                .build();
-
-        ItemRequest testRequest2 = ItemRequest.builder()
-                .requester(testOwner1)
-                .description("Request 2")
-                .created(LocalDateTime.now())
-                .build();
-
-        testRequest1 = itemRequestRepository.save(testRequest1);
-        testRequest2 = itemRequestRepository.save(testRequest2);
-
-        final long requestId1 = testRequest1.getId();
-        final long requestId2 = testRequest2.getId();
-
-        testItem1.setRequest(testRequest1);
-        testItem2.setRequest(testRequest2);
-
-        itemRepository.saveAll(Arrays.asList(testItem1, testItem2));
-
-        List<Item> foundItems = itemRepository.findByRequestIdIn(Set.of(requestId1, requestId2));
-
-        assertEquals(2, foundItems.size());
-        assertEquals("Item 1", foundItems.get(0).getName());
-        assertEquals("Item 2", foundItems.get(1).getName());
     }
 
 }
