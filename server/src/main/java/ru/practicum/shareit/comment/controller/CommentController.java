@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.comment.model.dto.CommentDto;
 import ru.practicum.shareit.comment.service.CommentService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.PositiveOrZero;
-
 @RestController
 @RequestMapping(path = "/items")
 @RequiredArgsConstructor
@@ -22,9 +19,9 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping(path = "/{itemId}/comment")
-    public CommentDto postComment(@PositiveOrZero @PathVariable(name = "itemId") long itemId,
-                                  @PositiveOrZero @RequestHeader("X-Sharer-User-Id") long authorId,
-                                  @RequestBody @Valid CommentDto commentDto) {
+    public CommentDto postComment(@PathVariable(name = "itemId") long itemId,
+                                  @RequestHeader("X-Sharer-User-Id") long authorId,
+                                  @RequestBody CommentDto commentDto) {
         log.debug("Request \"postComment\"is called.");
         return commentService.postComment(itemId, authorId, commentDto);
     }
