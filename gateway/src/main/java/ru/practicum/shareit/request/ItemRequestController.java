@@ -15,11 +15,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.practicum.shareit.request.dto.ItemRequestDto;
+
+import static ru.practicum.shareit.tool.Headers.USER_ID;
 
 
 @Controller
@@ -30,17 +31,14 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 public class ItemRequestController {
     private final ItemRequestClient requestClient;
 
-    private static final String USER_ID = "X-Sharer-User-Id";
-
-    @ResponseBody
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Object> createItemRequest(@Valid @RequestBody ItemRequestDto requestDto,
                                                     @Positive @RequestHeader(USER_ID) int requesterId) {
         log.info("Получен POST-запрос к эндпоинту /requests на создание запроса вещи.");
         return requestClient.createItemRequest(requestDto, requesterId);
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<Object> getItemRequestsByOwnerId(@Positive @RequestHeader(USER_ID) int requesterId) {
         log.info("Получен GET-запрос к эндпоинту /requests на получение списка собственных запросов на вещи.");
         return requestClient.getItemRequestsByOwnerId(requesterId);

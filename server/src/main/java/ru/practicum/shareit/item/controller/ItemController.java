@@ -12,11 +12,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/items")
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
 public class ItemController {
 
-    @Autowired
     private final ItemService itemService;
 
     @PostMapping

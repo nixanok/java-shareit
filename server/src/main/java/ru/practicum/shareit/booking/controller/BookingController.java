@@ -14,12 +14,11 @@ import ru.practicum.shareit.booking.tool.BookingMapper;
 import java.util.List;
 
 @RestController
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @RequestMapping(path = "/bookings")
 @Slf4j
 public class BookingController {
 
-    @Autowired
     private final BookingService bookingService;
 
     @PostMapping

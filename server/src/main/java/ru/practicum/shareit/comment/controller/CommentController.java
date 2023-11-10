@@ -10,12 +10,11 @@ import ru.practicum.shareit.comment.service.CommentService;
 
 @RestController
 @RequestMapping(path = "/items")
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Validated
 @Slf4j
 public class CommentController {
 
-    @Autowired
     private final CommentService commentService;
 
     @PostMapping(path = "/{itemId}/comment")

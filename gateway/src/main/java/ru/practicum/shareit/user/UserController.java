@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import ru.practicum.shareit.user.dto.BasicInfo;
 import ru.practicum.shareit.user.dto.EmailInfo;
@@ -29,6 +28,7 @@ import javax.validation.constraints.Positive;
 @Slf4j
 @Validated
 public class UserController {
+
     private final UserClient userClient;
 
     @GetMapping("/{userId}")
@@ -43,14 +43,12 @@ public class UserController {
         return userClient.allUsers();
     }
 
-    @ResponseBody
     @PostMapping
     public ResponseEntity<Object> createUser(@Validated({ BasicInfo.class, EmailInfo.class }) @RequestBody UserDto userDto) {
         log.info("Получен POST-запрос к эндпоинту /users на добавление пользователя.");
         return userClient.createUser(userDto);
     }
 
-    @ResponseBody
     @PatchMapping("/{userId}")
     public ResponseEntity<Object> updateUser(@RequestBody @Validated({ PatchInfo.class }) UserDto userDto,
                                              @Positive @PathVariable int userId) {

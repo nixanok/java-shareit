@@ -11,11 +11,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/users")
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
 public class UserController {
 
-    @Autowired
     private final UserService userService;
 
     @PostMapping
