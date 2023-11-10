@@ -1,4 +1,4 @@
-package ru.practicum.shareit.booking.model.dto;
+package ru.practicum.shareit.request.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Data
@@ -13,13 +14,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class BookingCreationDto {
+public class ItemRequestDto {
 
     private Long id;
 
-    private Long itemId;
+    @NotBlank(message = "Description cannot be blank.")
+    private String description;
 
-    private LocalDateTime start;
+    private Long requesterId;
 
-    private LocalDateTime end;
+    private LocalDateTime created;
 }

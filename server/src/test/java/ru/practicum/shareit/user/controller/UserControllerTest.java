@@ -2,6 +2,7 @@ package ru.practicum.shareit.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -51,96 +52,6 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testCreateUser_InvalidName() throws Exception {
-        UserDto userDto = UserDto.builder()
-                .name("John Doe ")
-                .email("john@example.com")
-                .build();
-
-        mockMvc.perform(post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\": \"John Doe \", \"email\": \"john@example.com\"}"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$[0].error").value("BAD_REQUEST"))
-                .andExpect(jsonPath("$[0].code").value(400))
-                .andExpect(jsonPath("$[0].description").value("Bad argument : name. Name cannot has spaces."));
-
-        verify(userService, never()).create(userDto);
-    }
-
-    @Test
-    public void testCreateUser_NullName() throws Exception {
-        UserDto userDto = UserDto.builder()
-                .email("john@example.com")
-                .build();
-
-        mockMvc.perform(post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\": \"john@example.com\"}"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$[0].error").value("BAD_REQUEST"))
-                .andExpect(jsonPath("$[0].code").value(400))
-                .andExpect(jsonPath("$[0].description").value("Bad argument : name. Name cannot be blank."));
-
-        verify(userService, never()).create(userDto);
-    }
-
-    @Test
-    public void testCreateUser_NullEmail() throws Exception {
-        UserDto userDto = UserDto.builder()
-                .name("JohnDoe")
-                .build();
-
-        mockMvc.perform(post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\": \"JohnDoe\"}"))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].error").value("BAD_REQUEST"))
-                .andExpect(jsonPath("$[0].code").value(400))
-                .andExpect(jsonPath("$[0].description").value("Bad argument : email. Email cannot be null."));
-
-        verify(userService, never()).create(userDto);
-    }
-
-    @Test
-    public void testCreateUser_InvalidEmail() throws Exception {
-        UserDto userDto = UserDto.builder()
-                .name("JohnDoe")
-                .email("example")
-                .build();
-
-        mockMvc.perform(post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\": \"JohnDoe\", \"email\": \"example\"}"))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].error").value("BAD_REQUEST"))
-                .andExpect(jsonPath("$[0].code").value(400))
-                .andExpect(jsonPath("$[0].description").value("Bad argument : email. Email should be valid."));
-
-        verify(userService, never()).create(userDto);
-    }
-
-    @Test
-    public void testCreateUser_BlankEmail() throws Exception {
-        UserDto userDto = UserDto.builder()
-                .name("JohnDoe")
-                .email("   ")
-                .build();
-
-        mockMvc.perform(post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\": \"JohnDoe\", \"email\": \"   \"}"))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].error").value("BAD_REQUEST"))
-                .andExpect(jsonPath("$[0].code").value(400))
-                .andExpect(jsonPath("$[0].description").value("Bad argument : email. Email should be valid."));
-        verify(userService, never()).create(userDto);
-    }
-
-    @Test
     public void testPatchUser_Successful() throws Exception {
         UserDto userDto = UserDto.builder()
                 .email("john@example.com")
@@ -156,25 +67,6 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.email").value("john@example.com"));
 
         verify(userService, times(1)).patch(1L, userDto);
-    }
-
-    @Test
-    public void testPatchUser_InvalidEmail() throws Exception {
-        UserDto userDto = UserDto.builder()
-                .email("example")
-                .name("JohnDoe")
-                .build();
-
-        mockMvc.perform(patch("/users/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\": \"JohnDoe\", \"email\": \"example\"}"))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].error").value("BAD_REQUEST"))
-                .andExpect(jsonPath("$[0].code").value(400))
-                .andExpect(jsonPath("$[0].description").value("Bad argument : email. Email should be valid."));
-
-        verify(userService, never()).patch(1L, userDto);
     }
 
     @Test
@@ -260,7 +152,7 @@ public class UserControllerTest {
 
     @Test
     public void testRemoveUserById_UserNotFound() throws Exception {
-        doThrow(UserNotFoundException.class).when(userService).removeById(1L);
+        Mockito.doThrow(UserNotFoundException.class).when(userService).removeById(1L);
 
         mockMvc.perform(delete("/users/1"))
                 .andExpect(status().isNotFound());

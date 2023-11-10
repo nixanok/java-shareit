@@ -3,33 +3,28 @@ package ru.practicum.shareit.booking.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.model.State;
 import ru.practicum.shareit.booking.model.dto.BookingApproveDto;
-import ru.practicum.shareit.booking.model.dto.BookingCreationInfo;
 import ru.practicum.shareit.booking.model.dto.BookingCreationDto;
 import ru.practicum.shareit.booking.model.dto.BookingSendingDto;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.booking.tool.BookingMapper;
 
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @RequestMapping(path = "/bookings")
-@Validated
 @Slf4j
 public class BookingController {
 
-    @Autowired
     private final BookingService bookingService;
 
     @PostMapping
     public BookingSendingDto createBooking(
-            @RequestBody @Validated(BookingCreationInfo.class) BookingCreationDto bookingCreationDto,
-            @PositiveOrZero @RequestHeader("X-Sharer-User-Id") long ownerId
+            @RequestBody BookingCreationDto bookingCreationDto,
+            @RequestHeader("X-Sharer-User-Id") long ownerId
     ) {
         log.debug("Request \"createBooking\"is called.");
         return bookingService.create(bookingCreationDto, ownerId);
@@ -37,9 +32,9 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public BookingApproveDto approveOrRejectBooking(
-            @PositiveOrZero @PathVariable(name = "bookingId") long bookingId,
+            @PathVariable(name = "bookingId") long bookingId,
             @RequestParam(name = "approved") Boolean isApproved,
-            @PositiveOrZero @RequestHeader("X-Sharer-User-Id") long ownerId
+            @RequestHeader("X-Sharer-User-Id") long ownerId
     ) {
         log.debug("Request \"approveOrRejectBooking\"is called.");
         return BookingMapper.toApproveDto(bookingService.approve(bookingId, isApproved, ownerId));
@@ -47,8 +42,8 @@ public class BookingController {
 
     @GetMapping("/{bookingId}")
     public BookingSendingDto getBooking(
-            @PositiveOrZero @PathVariable(name = "bookingId") long bookingId,
-            @PositiveOrZero @RequestHeader("X-Sharer-User-Id") long userId
+            @PathVariable(name = "bookingId") long bookingId,
+            @RequestHeader("X-Sharer-User-Id") long userId
     ) {
         log.debug("Request \"getBooking\"is called.");
         return bookingService.get(bookingId, userId);
@@ -56,7 +51,7 @@ public class BookingController {
 
     @GetMapping
     public List<BookingSendingDto> getBookingsByBookerId(
-            @PositiveOrZero @RequestHeader("X-Sharer-User-Id") long bookerId,
+            @RequestHeader("X-Sharer-User-Id") long bookerId,
         @RequestParam(name = "state", defaultValue = "ALL") State state,
         @RequestParam(name = "from", defaultValue = "0") int from,
         @RequestParam(name = "size", defaultValue = "10") int size
@@ -67,7 +62,7 @@ public class BookingController {
 
     @GetMapping("/owner")
     public List<BookingSendingDto> getBookingsItemsByUserId(
-            @PositiveOrZero @RequestHeader("X-Sharer-User-Id") long ownerId,
+            @RequestHeader("X-Sharer-User-Id") long ownerId,
             @RequestParam(name = "state", defaultValue = "ALL") State state,
             @RequestParam(name = "from", defaultValue = "0") int from,
             @RequestParam(name = "size", defaultValue = "10") int size

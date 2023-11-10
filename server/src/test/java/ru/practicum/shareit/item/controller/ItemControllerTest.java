@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -120,63 +121,6 @@ class ItemControllerTest {
     }
 
     @Test
-    public void testCreateItem_NullName() throws Exception {
-        Long ownerId = 1L;
-
-        itemDto.setName(null);
-
-        mockMvc.perform(post("/items")
-                        .header("X-Sharer-User-Id", "1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"description\": \"Description 1\", \"available\": \"true\"}"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$[0].error").value("BAD_REQUEST"))
-                .andExpect(jsonPath("$[0].code").value(400))
-                .andExpect(jsonPath("$[0].description")
-                        .value("Bad argument : name. Name cannot be blank."));
-
-        verify(itemService, never()).create(itemDto, ownerId);
-    }
-
-    @Test
-    public void testCreateItem_NullDescription() throws Exception {
-        Long ownerId = 1L;
-
-        itemDto.setDescription(null);
-
-        mockMvc.perform(post("/items")
-                        .header("X-Sharer-User-Id", ownerId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\": \"Item 1\", \"available\": \"true\"}"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$[0].error").value("BAD_REQUEST"))
-                .andExpect(jsonPath("$[0].code").value(400))
-                .andExpect(jsonPath("$[0].description")
-                        .value("Bad argument : description. Description cannot be blank."));
-
-        verify(itemService, never()).create(itemDto, ownerId);
-    }
-
-    @Test
-    public void testCreateItem_NullAvailable() throws Exception {
-        Long ownerId = 1L;
-
-        itemDto.setAvailable(null);
-
-        mockMvc.perform(post("/items")
-                        .header("X-Sharer-User-Id", "1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\": \"Item 1\", \"description\": \"Description 1\"}"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$[0].error").value("BAD_REQUEST"))
-                .andExpect(jsonPath("$[0].code").value(400))
-                .andExpect(jsonPath("$[0].description")
-                        .value("Bad argument : available. Available cannot be null."));
-
-        verify(itemService, never()).create(itemDto, ownerId);
-    }
-
-    @Test
     void testPatchItem_Successfully() {
         long itemId = 1L;
         long ownerId = 1L;
@@ -193,7 +137,7 @@ class ItemControllerTest {
         ItemDto result = itemController.patchItem(itemId, itemDto, ownerId);
 
         verify(itemService, times(1)).patch(eq(itemId), any(ItemDto.class), eq(ownerId));
-        assertEquals(updatedDto, result);
+        Assertions.assertEquals(updatedDto, result);
     }
 
     @Test
@@ -277,7 +221,7 @@ class ItemControllerTest {
         String response = mvcResult.getResponse().getContentAsString();
         ItemBookingsDto actualItemBookingsDto = objectMapper.readValue(response, ItemBookingsDto.class);
 
-        assertEquals(expectedItemBookingsDto, actualItemBookingsDto);
+        Assertions.assertEquals(expectedItemBookingsDto, actualItemBookingsDto);
         verify(itemService, times(1)).getById(itemId, ownerId);
     }
 

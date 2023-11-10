@@ -75,23 +75,6 @@ public class RequestControllerTest {
     }
 
     @Test
-    public void testCreateRequestWithEmptyDescription() throws Exception {
-        Long requesterId = 1L;
-        ItemRequestCreationDto requestDto = ItemRequestCreationDto.builder()
-                .description("")
-                .requesterId(requesterId)
-                .build();
-
-        mockMvc.perform(post("/requests")
-                        .header("X-Sharer-User-Id", requesterId.toString())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(requestDto)))
-                .andExpect(status().isBadRequest());
-
-        verify(itemRequestService, never()).create(any(ItemRequestCreationDto.class), any(Long.class));
-    }
-
-    @Test
     public void testGetRequestsByRequester() throws Exception {
         Long requesterId = 1L;
         Collection<ItemRequestSendingDto> requestDtos = Arrays.asList(
